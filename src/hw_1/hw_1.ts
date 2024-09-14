@@ -65,12 +65,11 @@ class Group {
     }
   
     showPerformance(): Student[] {
-      const sortedStudents = [...this.students].sort(
-        (a, b) => b.getPerformanceRating() - a.getPerformanceRating()
-      );
-  
-      return sortedStudents;
-    }
+        const sortedStudents = [...this.students].sort(
+          (a: Student, b: Student) => b.getPerformanceRating() - a.getPerformanceRating()
+        );
+        return sortedStudents;
+      }      
   }
   
 class Student {
