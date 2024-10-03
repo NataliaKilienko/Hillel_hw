@@ -43,9 +43,15 @@ class AccountingDepartment extends BaseDepartment {
                 this.paySalary(employee);
             }
         });
+        console.log("Payroll processed for active employees.");
     }
     paySalary(employee) {
-        console.log(`Paying salary to ${employee.firstName} ${employee.lastName}`);
+        if (isActiveEmployee(employee)) {
+            console.log(`Paying internal salary for active employee ${employee.firstName} ${employee.lastName}`);
+        }
+        else {
+            console.log(`${employee.firstName} ${employee.lastName} is not eligible for payroll.`);
+        }
     }
 }
 class Company {

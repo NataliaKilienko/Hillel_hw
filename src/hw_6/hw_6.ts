@@ -31,7 +31,7 @@ interface Department {
 
 interface Accounting extends Department {
     processPayroll(): void;
-    paySalary(employee: Employee): void;
+    paySalary(employee: Employee | PreHiredEmployee): void;
 }
 
 interface Budget {
@@ -80,13 +80,18 @@ class AccountingDepartment extends BaseDepartment implements Accounting {
     processPayroll(): void {
         this.employees.forEach(employee => {
             if (isActiveEmployee(employee)) {
-                this.paySalary(employee);
+                this.paySalary(employee);  
             }
         });
+        console.log("Payroll processed for active employees.");
     }
-
+    
     paySalary(employee: Employee): void {
-        console.log(`Paying salary to ${employee.firstName} ${employee.lastName}`);
+        if (isActiveEmployee(employee)) {
+            console.log(`Paying internal salary for active employee ${employee.firstName} ${employee.lastName}`);
+        } else {
+            console.log(`${employee.firstName} ${employee.lastName} is not eligible for payroll.`);
+        }
     }
 }
 
@@ -118,7 +123,7 @@ class Company {
 
         throw new Error("Invalid pre-hired employee");
 
-        
+
     }
 }
 
