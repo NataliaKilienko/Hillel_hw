@@ -68,6 +68,10 @@ function isActiveEmployee(employee: Employee): boolean {
     return employee.status === EmployeeStatus.Active;
 }
 
+function isEmployee(employee: PreHiredEmployee | Employee): employee is Employee {
+    return (employee as Employee).department !== undefined && (employee as Employee).paymentInfo !== undefined;
+}
+
 class AccountingDepartment extends BaseDepartment implements Accounting {
     constructor() {
         super("Accounting", "Finance");
@@ -80,17 +84,23 @@ class AccountingDepartment extends BaseDepartment implements Accounting {
     processPayroll(): void {
         this.employees.forEach(employee => {
             if (isActiveEmployee(employee)) {
-                this.paySalary(employee);  
+                this.paySalary(employee);
             }
         });
         console.log("Payroll processed for active employees.");
     }
-    
-    paySalary(employee: Employee): void {
-        if (isActiveEmployee(employee)) {
-            console.log(`Paying internal salary for active employee ${employee.firstName} ${employee.lastName}`);
+
+    paySalary(employee: Employee | PreHiredEmployee): void {
+        if (isEmployee(employee)) {
+            if (isActiveEmployee(employee)) {
+                console.log(`Paying internal salary for active employee ${employee.firstName} ${employee.lastName}`);
+            } else {
+                console.log(`${employee.firstName} ${employee.lastName} is not eligible for payroll.`);
+            }
+        } else if (isPreHired(employee)) {
+            console.log(`Paying external salary for pre-hired employee ${employee.firstName} ${employee.lastName}`);
         } else {
-            console.log(`${employee.firstName} ${employee.lastName} is not eligible for payroll.`);
+            throw new Error('Unexpected employee type');
         }
     }
 }

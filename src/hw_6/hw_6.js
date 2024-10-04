@@ -30,6 +30,9 @@ function isPreHired(employee) {
 function isActiveEmployee(employee) {
     return employee.status === EmployeeStatus.Active;
 }
+function isEmployee(employee) {
+    return employee.department !== undefined && employee.paymentInfo !== undefined;
+}
 class AccountingDepartment extends BaseDepartment {
     constructor() {
         super("Accounting", "Finance");
@@ -46,11 +49,19 @@ class AccountingDepartment extends BaseDepartment {
         console.log("Payroll processed for active employees.");
     }
     paySalary(employee) {
-        if (isActiveEmployee(employee)) {
-            console.log(`Paying internal salary for active employee ${employee.firstName} ${employee.lastName}`);
+        if (isEmployee(employee)) {
+            if (isActiveEmployee(employee)) {
+                console.log(`Paying internal salary for active employee ${employee.firstName} ${employee.lastName}`);
+            }
+            else {
+                console.log(`${employee.firstName} ${employee.lastName} is not eligible for payroll.`);
+            }
+        }
+        else if (isPreHired(employee)) {
+            console.log(`Paying external salary for pre-hired employee ${employee.firstName} ${employee.lastName}`);
         }
         else {
-            console.log(`${employee.firstName} ${employee.lastName} is not eligible for payroll.`);
+            throw new Error('Unexpected employee type');
         }
     }
 }
