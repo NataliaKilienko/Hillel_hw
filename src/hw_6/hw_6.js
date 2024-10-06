@@ -50,19 +50,17 @@ class AccountingDepartment extends BaseDepartment {
     }
     paySalary(employee) {
         if (isEmployee(employee)) {
-            if (isActiveEmployee(employee)) {
-                console.log(`Paying internal salary for active employee ${employee.firstName} ${employee.lastName}`);
-            }
-            else {
-                console.log(`${employee.firstName} ${employee.lastName} is not eligible for payroll.`);
-            }
+            const message = isActiveEmployee(employee)
+                ? `Paying internal salary for active employee ${employee.firstName} ${employee.lastName}`
+                : `${employee.firstName} ${employee.lastName} is not eligible for payroll.`;
+            console.log(message);
+            return;
         }
-        else if (isPreHired(employee)) {
+        if (isPreHired(employee)) {
             console.log(`Paying external salary for pre-hired employee ${employee.firstName} ${employee.lastName}`);
+            return;
         }
-        else {
-            throw new Error('Unexpected employee type');
-        }
+        throw new Error('Unexpected employee type');
     }
 }
 class Company {
@@ -75,18 +73,18 @@ class Company {
         this.preHiredEmployees.push(employee);
     }
     hireEmployee(preHired, department) {
-        if (isPreHired(preHired)) {
-            const newEmployee = {
-                ...preHired,
-                paymentInfo: preHired.bankAccountNumber,
-                status: EmployeeStatus.Active,
-                department: department
-            };
-            department.addEmployee(newEmployee);
-            this.preHiredEmployees = this.preHiredEmployees.filter(e => e !== preHired);
-            return newEmployee;
+        if (!isPreHired(preHired)) {
+            throw new Error("Invalid pre-hired employee");
         }
-        throw new Error("Invalid pre-hired employee");
+        const newEmployee = {
+            ...preHired,
+            paymentInfo: preHired.bankAccountNumber,
+            status: EmployeeStatus.Active,
+            department: department
+        };
+        department.addEmployee(newEmployee);
+        this.preHiredEmployees = this.preHiredEmployees.filter(e => e !== preHired);
+        return newEmployee;
     }
 }
 const accounting = new AccountingDepartment();
@@ -109,3 +107,4 @@ accounting.removeEmployee(hiredEmployee);
 console.log(`Removed employee: ${hiredEmployee.firstName} ${hiredEmployee.lastName} :с`);
 const isStillInDepartment = accounting.isEmployeeInDepartment(hiredEmployee);
 console.log(`Is ${hiredEmployee.firstName} still in the department? ${isStillInDepartment ? "Yes c: " : "No :с "}`);
+accounting.paySalary(hiredEmployee);
