@@ -24,6 +24,42 @@ class BaseDepartment {
         return this.employees.includes(employee);
     }
 }
+class DepartmentImpl extends BaseDepartment {
+    calculateBalance() {
+        return this.budget.credit - this.budget.debit;
+    }
+}
+class AccountingDepartment extends BaseDepartment {
+    constructor() {
+        super("Accounting", "Finance");
+    }
+    calculateBalance() {
+        return this.budget.credit - this.budget.debit;
+    }
+    processPayroll() {
+        this.salaryPayment();
+        console.log("Payroll processed for active employees.");
+    }
+    paySalary(employee) {
+        if (isEmployee(employee)) {
+            employee.status === EmployeeStatus.Active
+                ? this.internalPayment(employee)
+                : console.log(`${employee.firstName} ${employee.lastName} is not eligible for payroll.`);
+        }
+        else {
+            this.externalPayment(employee);
+        }
+    }
+    salaryPayment() {
+        this.employees.forEach(employee => this.paySalary(employee));
+    }
+    internalPayment(employee) {
+        console.log(`Internal payment for active employee ${employee.firstName} ${employee.lastName}`);
+    }
+    externalPayment(preHire) {
+        console.log(`External payment for pre-hired employee ${preHire.firstName} ${preHire.lastName}`);
+    }
+}
 function isPreHired(employee) {
     return employee.department === undefined;
 }
@@ -31,46 +67,23 @@ function isActiveEmployee(employee) {
     return employee.status === EmployeeStatus.Active;
 }
 function isEmployee(employee) {
-    return employee.department !== undefined && employee.paymentInfo !== undefined;
-}
-class AccountingDepartment extends BaseDepartment {
-    constructor() {
-        super("Accounting", "Finance");
-    }
-    calculateBalance() {
-        return this.budget.debit - this.budget.credit;
-    }
-    processPayroll() {
-        this.employees.forEach(employee => {
-            if (isActiveEmployee(employee)) {
-                this.paySalary(employee);
-            }
-        });
-        console.log("Payroll processed for active employees.");
-    }
-    paySalary(employee) {
-        if (isEmployee(employee)) {
-            const message = isActiveEmployee(employee)
-                ? `Paying internal salary for active employee ${employee.firstName} ${employee.lastName}`
-                : `${employee.firstName} ${employee.lastName} is not eligible for payroll.`;
-            console.log(message);
-            return;
-        }
-        if (isPreHired(employee)) {
-            console.log(`Paying external salary for pre-hired employee ${employee.firstName} ${employee.lastName}`);
-            return;
-        }
-        throw new Error('Unexpected employee type');
-    }
+    return employee.department !== undefined;
 }
 class Company {
+    name;
     departments = [];
     preHiredEmployees = [];
+    allEmployees = [];
+    constructor(name) {
+        this.name = name;
+    }
     addDepartment(department) {
         this.departments.push(department);
+        this.updateAllEmployees();
     }
     addPreHiredEmployee(employee) {
         this.preHiredEmployees.push(employee);
+        this.updateAllEmployees();
     }
     hireEmployee(preHired, department) {
         if (!isPreHired(preHired)) {
@@ -84,12 +97,22 @@ class Company {
         };
         department.addEmployee(newEmployee);
         this.preHiredEmployees = this.preHiredEmployees.filter(e => e !== preHired);
+        this.updateAllEmployees();
         return newEmployee;
     }
+    getAllEmployees() {
+        return this.allEmployees;
+    }
+    updateAllEmployees() {
+        const departmentEmployees = this.departments.flatMap(dept => dept.employees);
+        this.allEmployees = [...this.preHiredEmployees, ...departmentEmployees];
+    }
 }
+const company = new Company("Test Company");
 const accounting = new AccountingDepartment();
-const company = new Company();
+const department = new DepartmentImpl("IT", "Technology");
 company.addDepartment(accounting);
+company.addDepartment(department);
 const preHired = {
     firstName: "Nataliia",
     lastName: "Killienko",
@@ -104,7 +127,8 @@ console.log("Setting employee status to OnLeave:");
 hiredEmployee.status = EmployeeStatus.OnLeave;
 console.log(`${hiredEmployee.firstName} is now on leave.`);
 accounting.removeEmployee(hiredEmployee);
-console.log(`Removed employee: ${hiredEmployee.firstName} ${hiredEmployee.lastName} :с`);
+console.log(`Removed employee: ${hiredEmployee.firstName} ${hiredEmployee.lastName}`);
 const isStillInDepartment = accounting.isEmployeeInDepartment(hiredEmployee);
-console.log(`Is ${hiredEmployee.firstName} still in the department? ${isStillInDepartment ? "Yes c: " : "No :с "}`);
+console.log(`Is ${hiredEmployee.firstName} still in the department? ${isStillInDepartment ? "Yes" : "No"}`);
 accounting.paySalary(hiredEmployee);
+console.log("All employees in the company:", company.getAllEmployees());
