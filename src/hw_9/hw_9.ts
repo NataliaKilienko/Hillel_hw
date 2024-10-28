@@ -51,14 +51,14 @@ class FilmList {
         };
       }
 
-       applySearchValue(filterType: keyof IFilmFilters, value: any): void {
+      applySearchValue(filterType: keyof IFilmFilters, value: GridFilterSetValues<string> | GridFilterValue<number>): void {
         if (filterType === "name" || filterType === "awards") {
-            this.filters[filterType].values = value;
+          this.filters[filterType].values = (value as GridFilterSetValues<string>).values;
         } else {
-            this.filters[filterType].filter = value.filter;
-            if ("filterTo" in value) this.filters[filterType].filterTo = value.filterTo;
+          this.filters[filterType].filter = (value as GridFilterValue<number>).filter;
+          if ("filterTo" in value) this.filters[filterType].filterTo = (value as GridFilterValue<number>).filterTo;
         }
-      }
+      }      
 
       getFilteredFilms(): IFilm[] {
         return this.films.filter((film) => {
@@ -83,9 +83,9 @@ class CategoryList {
         }
     }
 
-    applySearchValue(filterType: keyof ICategoryFilters, value: any): void { 
+    applySearchValue(filterType: keyof ICategoryFilters, value: GridFilterSetValues<string>): void { 
         if(filterType === "name"){
-            this.filters[filterType].values = value;
+            this.filters[filterType].values = (value as GridFilterSetValues<string>).values;
         }
     }
 
@@ -118,11 +118,11 @@ const categories: ICategory[] = [
   ];
 
 const filmList = new FilmList(films);
-filmList.applySearchValue("year", { filter: 2010, filterTo: 2016 });
-filmList.applySearchValue("name", ["Inception", "Your Name"]);
-filmList.applySearchValue("awards", "Japan Academy Prize");
+filmList.applySearchValue("year", { type: GridFilterTypeEnum.Range, filter: 2010, filterTo: 2016});
+filmList.applySearchValue("name", { values: ["Inception", "Your Name"]} );
+filmList.applySearchValue("awards", { values: ["Japan Academy Prize"] } );
 console.log(filmList.getFilteredFilms());
 
 const categoryList = new CategoryList(categories);
-categoryList.applySearchValue("name", "Anime");
+categoryList.applySearchValue("name", { values: ["Anime"] });
 console.log(JSON.stringify(categoryList.getFilteredCategories(), null, 2));

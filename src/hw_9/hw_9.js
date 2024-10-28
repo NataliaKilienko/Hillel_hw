@@ -19,7 +19,7 @@ class FilmList {
     }
     applySearchValue(filterType, value) {
         if (filterType === "name" || filterType === "awards") {
-            this.filters[filterType].values = value;
+            this.filters[filterType].values = value.values;
         }
         else {
             this.filters[filterType].filter = value.filter;
@@ -48,7 +48,7 @@ class CategoryList {
     }
     applySearchValue(filterType, value) {
         if (filterType === "name") {
-            this.filters[filterType].values = value;
+            this.filters[filterType].values = value.values;
         }
     }
     getFilteredCategories() {
@@ -76,10 +76,10 @@ const categories = [
     { name: "Anime", films: [films[5], films[6], films[7], films[8]] },
 ];
 const filmList = new FilmList(films);
-filmList.applySearchValue("year", { filter: 2010, filterTo: 2016 });
-filmList.applySearchValue("name", ["Inception", "Your Name"]);
-filmList.applySearchValue("awards", "Japan Academy Prize");
+filmList.applySearchValue("year", { type: GridFilterTypeEnum.Range, filter: 2010, filterTo: 2016 });
+filmList.applySearchValue("name", { values: ["Inception", "Your Name"] });
+filmList.applySearchValue("awards", { values: ["Japan Academy Prize"] });
 console.log(filmList.getFilteredFilms());
 const categoryList = new CategoryList(categories);
-categoryList.applySearchValue("name", "Anime");
+categoryList.applySearchValue("name", { values: ["Anime"] });
 console.log(JSON.stringify(categoryList.getFilteredCategories(), null, 2));
