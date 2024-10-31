@@ -1,5 +1,5 @@
 function DeprecatedMethod(options: { reason: string; replacementMethod?: string }) {
-    return function (target: any, propertyKey: string, descriptor: PropertyDescriptor): void {
+    return function (target: object, propertyKey: string, descriptor: PropertyDescriptor): void {
         const originalMethod = descriptor.value;
         descriptor.value = function (...args: any[]) {
             console.warn(`Warning: ${propertyKey} is deprecated. ${options.reason}`);
