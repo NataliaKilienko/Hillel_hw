@@ -1,10 +1,10 @@
-function DeprecatedMethod(reason: string, replacementMethod?: string) {
+function DeprecatedMethod(options: { reason: string; replacementMethod?: string }) {
     return function (target: any, propertyKey: string, descriptor: PropertyDescriptor): void {
         const originalMethod = descriptor.value;
         descriptor.value = function (...args: any[]) {
-            console.warn(`Warning: ${propertyKey} is deprecated. ${reason}`);
-            if (replacementMethod) {
-                console.warn(`Please use ${replacementMethod} instead.`);
+            console.warn(`Warning: ${propertyKey} is deprecated. ${options.reason}`);
+            if (options.replacementMethod) {
+                console.warn(`Please use ${options.replacementMethod} instead.`);
             }
             return originalMethod.apply(this, args);
         };
@@ -12,7 +12,7 @@ function DeprecatedMethod(reason: string, replacementMethod?: string) {
 }
 
 class SomeClass {
-    @DeprecatedMethod("This method is outdated.", "newMethod")
+    @DeprecatedMethod({ reason: "This method is outdated.", replacementMethod: "newMethod" })
     oldMethod() {
         console.log("Old method.");
     }
@@ -22,8 +22,8 @@ class SomeClass {
     }
 }
 
-// const example = new SomeClass();
-// example.oldMethod();
+const example = new SomeClass();
+example.oldMethod();
 
 function MinLength(min: number) {
     return function (target: any, propertyKey: string){

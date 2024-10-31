@@ -5,13 +5,13 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-function DeprecatedMethod(reason, replacementMethod) {
+function DeprecatedMethod(options) {
     return function (target, propertyKey, descriptor) {
         const originalMethod = descriptor.value;
         descriptor.value = function (...args) {
-            console.warn(`Warning: ${propertyKey} is deprecated. ${reason}`);
-            if (replacementMethod) {
-                console.warn(`Please use ${replacementMethod} instead.`);
+            console.warn(`Warning: ${propertyKey} is deprecated. ${options.reason}`);
+            if (options.replacementMethod) {
+                console.warn(`Please use ${options.replacementMethod} instead.`);
             }
             return originalMethod.apply(this, args);
         };
@@ -26,10 +26,10 @@ class SomeClass {
     }
 }
 __decorate([
-    DeprecatedMethod("This method is outdated.", "newMethod")
+    DeprecatedMethod({ reason: "This method is outdated.", replacementMethod: "newMethod" })
 ], SomeClass.prototype, "oldMethod", null);
-// const example = new SomeClass();
-// example.oldMethod();
+const example = new SomeClass();
+example.oldMethod();
 function MinLength(min) {
     return function (target, propertyKey) {
         let value;
