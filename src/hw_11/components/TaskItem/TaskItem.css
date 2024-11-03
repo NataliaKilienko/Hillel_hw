@@ -1,0 +1,113 @@
+.task-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #f3c2a1;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.task-item input[type="checkbox"] {
+  margin-right: 10px;
+  accent-color: #f2a65a;
+}
+
+.task-item span {
+  flex-grow: 1;
+  color: #333;
+  font-size: 16px;
+  word-wrap: break-word;
+}
+
+.task-item .edit-input {
+  padding: 5px 10px;
+  border: 1px solid #f3c2a1;
+  border-radius: 4px;
+  background-color: #fff5ec;
+  color: #333;
+  font-size: 16px;
+  margin-right: 5px;
+  outline: none;
+  transition: border-color 0.3s ease;
+  width: 100%; 
+  box-sizing: border-box;
+}
+
+.task-item .edit-input:focus {
+  border-color: #f2a65a;
+}
+
+.task-item .delete-btn {
+  background-color: #f28b82;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.task-item .delete-btn:hover {
+  background-color: #e57373;
+}
+
+.task-item .save-btn {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+.task-item .save-btn:hover {
+  background-color: #43a047;
+}
+
+@media (max-width: 768px) {
+  .task-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .task-item input[type="checkbox"] {
+    margin-right: 0;
+  }
+
+  .task-item .delete-btn,
+  .task-item .save-btn {
+    padding: 8px 12px;
+    font-size: 14px;
+    width: 100%; 
+    margin-top: 5px; 
+  }
+
+  .task-item .edit-input {
+    width: 100%; 
+    margin-right: 0;
+    margin-bottom: 5px;
+  }
+}
+
+@media (max-width: 480px) {
+  .task-item span {
+    font-size: 14px;
+  }
+
+  .task-item .delete-btn,
+  .task-item .save-btn {
+    padding: 6px 10px;
+    font-size: 12px;
+    width: 100%;
+    margin-top: 5px;
+  }
+
+  .task-item .edit-input {
+    font-size: 14px;
+    width: 100%; 
+    margin-bottom: 5px;
+  }
+}

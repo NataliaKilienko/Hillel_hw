@@ -1,0 +1,15 @@
+body {
+  font-family: 'Poppins', Arial, sans-serif;
+  background-color: #f4f4f4;
+  background-image: url('./assets/images/bg.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: repeat;
+  margin: 0;
+  padding: 0;
+  color: #333;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; 
+}
